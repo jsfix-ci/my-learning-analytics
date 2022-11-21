@@ -46,6 +46,28 @@ function createProgressBar ({ data, width, height, domElement, tip }) {
       .style('max-width', '300px')
   }
 
+  /* TODO: JSFIX could not patch the breaking change:
+  Remove d3.event and changed the interface for the listeners parsed to .on() methods 
+  Suggested fix: 
+  This is only breaking if the second argument to .on() is being parsed the “index” (i) and “elements” (e) as arguments. 
+  The signature of the listeners have been changed to now only take the event object and the “datum” (d) (which it already did).
+  To get the existing “index” and “elements” functionality you can inside the listener use
+      const selection = event.selection;
+      const e = selection.nodes();
+      const i = e.indexOf(this);
+  For further details see the official migration guide here: https://observablehq.com/@d3/d3v6-migration-guide#events. 
+   */
+  /* TODO: JSFIX could not patch the breaking change:
+  Remove d3.event and changed the interface for the listeners parsed to .on() methods 
+  Suggested fix: 
+  This is only breaking if the second argument to .on() is being parsed the “index” (i) and “elements” (e) as arguments. 
+  The signature of the listeners have been changed to now only take the event object and the “datum” (d) (which it already did).
+  To get the existing “index” and “elements” functionality you can inside the listener use
+      const selection = event.selection;
+      const e = selection.nodes();
+      const i = e.indexOf(this);
+  For further details see the official migration guide here: https://observablehq.com/@d3/d3v6-migration-guide#events. 
+   */
   bar.append('rect')
     .attr('width', d => x(d.percent_gotten) - margin.left)
     .attr('x', (_, i) => x(calculatePercentSoFar(i)))
@@ -57,7 +79,13 @@ function createProgressBar ({ data, width, height, domElement, tip }) {
     .style('outline-style', 'solid')
     .style('outline-width', '1px')
     .on('mouseover', function () {
-      const x = d3.mouse(this)[0]
+      const x = /* TODO: JSFIX could not patch the breaking change:
+      d3.mouse, d3.touch, d3.touches and d3.clientPoint has been removed. use d3.pointer(s) instead. 
+      Suggested fix: The new d3.pointer(event) method replaces the d3.mouse method.
+      To fix this change simply rename the method call, and then parse the `event` to the method instead of the current arguments.
+      This also means that if you are not already doing it, you need to parse the `event` as the first argument to the event listener. 
+      For an example see the official migration guide here: https://observablehq.com/@d3/d3v6-migration-guide#pointer. */
+      d3.mouse(this)[0]
       const percentVariation = ((aWidth - x) / aWidth) * 100
       if (percentVariation < 7) {
         tipPosition('sw')
@@ -160,6 +188,28 @@ function createProgressBar ({ data, width, height, domElement, tip }) {
 
   if (tip) {
     svg.call(tip)
+    /* TODO: JSFIX could not patch the breaking change:
+    Remove d3.event and changed the interface for the listeners parsed to .on() methods 
+    Suggested fix: 
+    This is only breaking if the second argument to .on() is being parsed the “index” (i) and “elements” (e) as arguments. 
+    The signature of the listeners have been changed to now only take the event object and the “datum” (d) (which it already did).
+    To get the existing “index” and “elements” functionality you can inside the listener use
+        const selection = event.selection;
+        const e = selection.nodes();
+        const i = e.indexOf(this);
+    For further details see the official migration guide here: https://observablehq.com/@d3/d3v6-migration-guide#events. 
+     */
+    /* TODO: JSFIX could not patch the breaking change:
+    Remove d3.event and changed the interface for the listeners parsed to .on() methods 
+    Suggested fix: 
+    This is only breaking if the second argument to .on() is being parsed the “index” (i) and “elements” (e) as arguments. 
+    The signature of the listeners have been changed to now only take the event object and the “datum” (d) (which it already did).
+    To get the existing “index” and “elements” functionality you can inside the listener use
+        const selection = event.selection;
+        const e = selection.nodes();
+        const i = e.indexOf(this);
+    For further details see the official migration guide here: https://observablehq.com/@d3/d3v6-migration-guide#events. 
+     */
     bar
       .on('mouseover', tip.show)
       .on('mouseout', tip.hide)
